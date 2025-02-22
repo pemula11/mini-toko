@@ -78,6 +78,7 @@ class ProductRepository {
         try {
             return await product.update(newProduct);
         } catch (error) {
+            console.error("Failed to update product: ", error);
             throw new Error("Failed to update product: ", error);
             
         }

@@ -119,13 +119,13 @@ module.exports.addProduct = async (req, res, next) => {
 module.exports.updateProduct = async (req, res, next) => {
     const {id} = req.params;
     
+
     
     const schema = {
-        name: 'string|optional',
+        product_name: 'string|optional',
         price: 'number|min:1|optional',
         stock: 'number|min:0|optional',
-        description: 'string|optional',
-        category: 'string|optional'
+
     }
 
     const validate = v.validate(req.body, schema);
@@ -135,18 +135,42 @@ module.exports.updateProduct = async (req, res, next) => {
             message: validate
         });
     }
+    
+    const product = await productService.findOne(id);
+    if (!product) {
+        return res.status(404).json({
+            status: 'error',
+            message: 'Product not found'
+        });
+    }
+    
 
-    const product = await productService.update(id, req.body);
+    const newProduct = await productService.update(product, req.body);
+
+    if (!newProduct) {
+        return res.status(400).json({
+            status: 'error',
+            message: 'Failed to update product'
+        });
+    }
 
     return res.json({
         status: 'success',
-        data: product
+        data: newProduct
     });
 }
 
 module.exports.deleteProduct = async (req, res, next) => {
     const {id} = req.params;
     const product = await productService.delete(id);
+
+    if (!product) {
+        return res.status(404).json({
+            status: 'error',
+            message: 'Product not found'
+        });
+    }
+
     return res.json({
         status: 'success',
         message: 'product deleted'

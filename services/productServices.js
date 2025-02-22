@@ -15,13 +15,16 @@ class ProductService {
 
     async findOne(id){
         
-        
-        const product = await ProductRepository.findOne(id);
-
-        if (!product) {
-            throw new ExpressError('Product not found', 404);
+       try {
+            const product = await ProductRepository.findOne(id);
+            if (!product) {
+                throw new ExpressError('Product not found', 404);
+            }
+            return product;
         }
-        return product;
+        catch (error) {
+            return null;
+        }
         
     }
 
@@ -36,14 +39,15 @@ class ProductService {
     async create(product) {
         return await ProductRepository.create(product);
     }
-    async update(productId, newProduct) {
+    async update(product, newProduct) {
     
-        
-        const product = await this.findOne(productId);
-        if (!product) {
-            throw new ExpressError('Product not found', 404);
+        try {
+           
+            return await ProductRepository.update(product, newProduct);
         }
-        return await ProductRepository.update(product, newProduct);
+        catch (error) {
+            console.error("Failed to update product: ", error);
+        }
     }
 
     async updateDirect(product, data){
@@ -52,12 +56,17 @@ class ProductService {
 
     async delete(id){
 
-    
-        const product = await this.findOne(id);
-        if (!product) {
-            throw new ExpressError('Product not found', 404);
+        try {
+            
+            const product = await this.findOne(id);
+            if (!product) {
+                throw new ExpressError('Product not found', 404);
+            }
+            console.log(product);
+            return await ProductRepository.delete(product);
+        } catch (error) {
+            return null;
         }
-        return await ProductRepository.delete(product);
 
     }
 
