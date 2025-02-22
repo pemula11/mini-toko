@@ -1,0 +1,147 @@
+<% layout('layouts/app') %>
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">Add Product</h1>
+    
+  
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <form action="/admin/transaction" method="POST" class="validated-form" novalidate>
+
+                <div class="mb-3">
+                    <label for="code" class="form-label">Product Name</label>
+                    <select name="product_code" id="product" class="form-control">
+                        <% products.forEach(function(product) { %>
+                            <option value="<%= product.product_code %>" 
+                                data-price="<%= product.price %>"
+                                data-stock="<%= product.stock %>">
+                                <%= product.product_name %>
+                            </option>
+                        <% }); %>
+                    </select>
+                    <div class="invalid-feedback">
+                        Please select a product
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="stock" class="form-label">stock</label>
+                    <input 
+                        type="number" 
+                        name="stock" 
+                        id="stock" 
+                        class="form-control <%= locals.errors?.stock ? 'is-invalid' : '' %>"
+                        value="<%= locals.stock || '' %>"
+                        min="0"
+                        readonly
+                        required
+                    >
+                    <div class="invalid-feedback">
+                        Please enter a valid stock
+                    </div>
+                </div>
+
+
+                <div class="mb-3">
+                    <label for="price" class="form-label">Price</label>
+                    <input 
+                        type="number" 
+                        name="price" 
+                        id="price" 
+                        class="form-control <%= locals.errors?.price ? 'is-invalid' : '' %>"
+                        value="<%= locals.price || '' %>"
+                        min="0"
+                        readonly
+                        required
+                    >
+                    <div class="invalid-feedback">
+                        Please enter a valid price
+                    </div>
+                </div>
+                
+
+                <div class="mb-3">
+                    <label for="quantity" class="form-label">quantity</label>
+                    <input 
+                        type="number" 
+                        name="quantity" 
+                        id="quantity" 
+                        class="form-control <%= locals.errors?.quantity ? 'is-invalid' : '' %>"
+                        value="<%= locals.quantity || '' %>"
+                        min="0"
+                        required
+                    >
+                    <div class="invalid-feedback">
+                        Please enter a valid quantity amount
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="total" class="form-label">total</label>
+                    <input 
+                        type="number" 
+                        name="total" 
+                        id="total" 
+                        class="form-control <%= locals.errors?.total ? 'is-invalid' : '' %>"
+                        value="<%= locals.total || '' %>"
+                        min="0"
+                        required
+                    >
+                    <div class="invalid-feedback">
+                        Please enter a valid total amount
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Process</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const productSelect = document.getElementById('product');
+        const unitPriceInput = document.getElementById('price');
+        const quantityInput = document.getElementById('quantity');
+        const totalPriceInput = document.getElementById('total');
+        const stockInfo = document.getElementById('stock');
+    
+        function updatePrice() {
+            console.log('updatePrice');
+            const selectedOption = productSelect.options[productSelect.selectedIndex];
+            const unitPrice = selectedOption.dataset.price || 0;
+            const stock = selectedOption.dataset.stock || 0;
+            const quantity = quantityInput.value || 0;
+    
+            unitPriceInput.value = unitPrice;
+            stockInfo.value = stock;
+            totalPriceInput.value = (unitPrice * quantity).toFixed(2);
+    
+            // Update max quantity based on stock
+            quantityInput.max = stock;
+            
+            // Validate quantity against stock
+            if (quantity > stock) {
+                quantityInput.value = stock;
+                updatePrice();
+            }
+        }
+    
+        productSelect.addEventListener('change', updatePrice);
+        quantityInput.addEventListener('input', updatePrice);
+    
+        // Initial price update
+        updatePrice();
+    
+        // Form validation
+        const forms = document.querySelectorAll('.validated-form');
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    });
+    </script>

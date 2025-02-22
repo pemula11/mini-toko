@@ -95,7 +95,3 @@ public/
 
 # Windows thumbnail cache
 Thumbs.db
-
-# Express.js specific
-public/
-views/

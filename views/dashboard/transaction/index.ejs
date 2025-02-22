@@ -1,0 +1,56 @@
+<% layout('layouts/app') %>
+
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+    
+</div>
+<!-- 
+ -->
+
+<!-- Content Row -->
+
+<div class="row">
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">List Products</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                
+                                <th>Sales refrance</th>
+                                <th>Product</th>
+                                <th>Date</th>
+                                <th>price</th>
+                                <th>quantity</th>
+                                <th>total</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% transactions.forEach(function(transaction) { %>
+                                <tr>
+                                    <td><%= transaction.sales_referance %></td>
+                                    <td><%= transaction.product.product_name %></td>
+                                    <td><%= transaction.sales_date %></td>
+                                    <td><%= transaction.price %></td>
+                                    <td><%= transaction.quantity %></td>
+                                    <td><%= transaction.subtotal %></td>
+                                    
+
+                                    
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
