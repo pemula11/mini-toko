@@ -40,6 +40,12 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
+app.use((err, req, res, next) => {
+  const {status = 500, message = 'Something went wrong'} = err;
+  res.status(status).send(message);
+}
+);
+
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
